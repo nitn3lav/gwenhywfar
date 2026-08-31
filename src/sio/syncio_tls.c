@@ -1576,7 +1576,53 @@ int GWENHYWFAR_CB GWEN_SyncIo_Tls_Write(GWEN_SYNCIO *sio,
 
 
 
+int GWENHYWFAR_CB GWEN_SyncIo_Tls_GetPeerCertAtIndex(GWEN_SYNCIO *sio,
+                                                     unsigned int index,
+                                                     const unsigned char **data,
+                                                     uint32_t *size)
+{
+  GWEN_SYNCIO_TLS *xio;
+  const gnutls_datum_t *cert_list;
+  unsigned int cert_list_size;
 
+  assert(sio);
 
+  xio=GWEN_INHERIT_GETDATA(GWEN_SYNCIO, GWEN_SYNCIO_TLS, sio);
+  assert(xio);
 
+  cert_list=gnutls_certificate_get_peers(xio->session, &cert_list_size);
+  if (cert_list==NULL || cert_list_size==0) {
+    DBG_INFO(GWEN_LOGDOMAIN, "No peer certificates found");
+    return GWEN_ERROR_NO_DATA;
+  }
 
+  if (cert_list_size<=index) {
+    *data=0;
+    *size=0;
+  }
+  else {
+    *data=cert_list[index].data;
+    *size=cert_list[index].size;
+  }
+
+  return 0;
+}
+
+int GWENHYWFAR_CB GWEN_SyncIo_Tls_GetPeerCertsCount(GWEN_SYNCIO *sio, uint32_t *count)
+{
+  GWEN_SYNCIO_TLS *xio;
+  const gnutls_datum_t *cert_list;
+
+  assert(sio);
+
+  xio=GWEN_INHERIT_GETDATA(GWEN_SYNCIO, GWEN_SYNCIO_TLS, sio);
+  assert(xio);
+
+  cert_list=gnutls_certificate_get_peers(xio->session, count);
+  if (cert_list==NULL || count==0) {
+    DBG_INFO(GWEN_LOGDOMAIN, "No peer certificates found");
+    return GWEN_ERROR_NO_DATA;
+  }
+
+  return 0;
+}

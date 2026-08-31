@@ -80,6 +80,9 @@ GWENHYWFAR_API void GWEN_SyncIo_Tls_SetRemoteHostName(GWEN_SYNCIO *sio, const ch
 GWENHYWFAR_API GWEN_SSLCERTDESCR *GWEN_SyncIo_Tls_GetPeerCertDescr(const GWEN_SYNCIO *sio);
 
 
+GWENHYWFAR_API int GWEN_SyncIo_Tls_GetPeerCertAtIndex(GWEN_SYNCIO *sio, unsigned int index, const unsigned char **data, uint32_t *size);
+GWENHYWFAR_API int GWEN_SyncIo_Tls_GetPeerCertsCount(GWEN_SYNCIO *sio, uint32_t *count);
+
 
 typedef int GWENHYWFAR_CB(*GWEN_SIO_TLS_CHECKCERT_FN)(GWEN_SYNCIO *sio, const GWEN_SSLCERTDESCR *cert);
 GWENHYWFAR_API GWEN_SIO_TLS_CHECKCERT_FN GWEN_SyncIo_Tls_SetCheckCertFn(GWEN_SYNCIO *sio, GWEN_SIO_TLS_CHECKCERT_FN f);
